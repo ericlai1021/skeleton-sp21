@@ -27,8 +27,10 @@ public class Game {
         _model.addTile(getValidNewTile());
         while (_playing) {
             if (!_model.gameOver()) {
-                _model.addTile(getValidNewTile());
-                _model.notifyObservers();
+                if (_model.checkBoardEmpty()) {
+                    _model.addTile(getValidNewTile());
+                    _model.notifyObservers();
+                }
             }
 
             boolean moved;

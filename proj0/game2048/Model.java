@@ -113,6 +113,183 @@ public class Model extends Observable {
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        if (side == Side.NORTH) {
+            for (int c = 0; c < board.size(); c++) {
+                for (int r = board.size() - 1; r >= 0; r--) {
+                    Tile t = board.tile(c, r);
+                    if (t != null) {
+                        int cnt = 0;
+                        for (int rTmp = r - 1; rTmp >= 0; rTmp--) {
+                            Tile tB = board.tile(c, rTmp);
+                            if (tB == null) {
+                                cnt++;
+                            }
+                            else {
+                                if (tB.value() == t.value()) {
+                                    board.move(c, r, tB);
+                                }
+                                else {
+                                    if (cnt > 0) {
+                                        board.move(c, r - 1, tB);
+                                        r--;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        int flag = 0;
+                        for (int rTmp1 = r; rTmp1 >= 0; rTmp1--) {
+                            for (int rTmp2 = rTmp1 - 1; rTmp2 >= 0; rTmp2--) {
+                                Tile tB = board.tile(c, rTmp2);
+                                if (tB != null) {
+                                    board.move(c, rTmp1, tB);
+                                    flag = 1;
+                                    break;
+                                }
+                            }
+                        }
+                        if (flag == 1) r++;
+                    }
+
+                    changed = true;
+                    score += 3;
+                }
+            }
+        } else if (side == Side.SOUTH) {
+            for (int c = 0; c < board.size(); c++) {
+                for (int r = 0; r < board.size(); r++) {
+                    Tile t = board.tile(c, r);
+                    if (t != null) {
+                        int cnt = 0;
+                        for (int rTmp = r + 1; rTmp < board.size(); rTmp++) {
+                            Tile tB = board.tile(c, rTmp);
+                            if (tB == null) {
+                                cnt++;
+                            }
+                            else {
+                                if (tB.value() == t.value()) {
+                                    board.move(c, r, tB);
+                                }
+                                else {
+                                    if (cnt > 0) {
+                                        board.move(c, r + 1, tB);
+                                        r++;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        int flag = 0;
+                        for (int rTmp1 = r; rTmp1 < board.size(); rTmp1++) {
+                            for (int rTmp2 = rTmp1 + 1; rTmp2 < board.size(); rTmp2++) {
+                                Tile tB = board.tile(c, rTmp2);
+                                if (tB != null) {
+                                    board.move(c, rTmp1, tB);
+                                    flag = 1;
+                                    break;
+                                }
+                            }
+                        }
+                        if (flag == 1) r--;
+                    }
+
+                    changed = true;
+                    score += 3;
+                }
+            }
+        } else if (side == Side.WEST) {
+            for (int r = 0; r < board.size(); r++) {
+                for (int c = 0; c < board.size(); c++) {
+                    Tile t = board.tile(c, r);
+                    if (t != null) {
+                        int cnt = 0;
+                        for (int cTmp = c + 1; cTmp < board.size(); cTmp++) {
+                            Tile tB = board.tile(cTmp, r);
+                            if (tB == null) {
+                                cnt++;
+                            }
+                            else {
+                                if (tB.value() == t.value()) {
+                                    board.move(c, r, tB);
+                                }
+                                else {
+                                    if (cnt > 0) {
+                                        board.move(c + 1, r, tB);
+                                        c++;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        int flag = 0;
+                        for (int cTmp1 = c; cTmp1 < board.size(); cTmp1++) {
+                            for (int cTmp2 = cTmp1 + 1; cTmp2 < board.size(); cTmp2++) {
+                                Tile tB = board.tile(cTmp2, r);
+                                if (tB != null) {
+                                    board.move(cTmp1, r, tB);
+                                    flag = 1;
+                                    break;
+                                }
+                            }
+                        }
+                        if (flag == 1) c--;
+                    }
+
+                    changed = true;
+                    score += 3;
+                }
+            }
+        } else if (side == Side.EAST) {
+            for (int r = 0; r < board.size(); r++) {
+                for (int c = board.size() - 1; c >= 0; c--) {
+                    Tile t = board.tile(c, r);
+                    if (t != null) {
+                        int cnt = 0;
+                        for (int cTmp = c - 1; cTmp >= 0; cTmp--) {
+                            Tile tB = board.tile(cTmp, r);
+                            if (tB == null) {
+                                cnt++;
+                            }
+                            else {
+                                if (tB.value() == t.value()) {
+                                    board.move(c, r, tB);
+                                }
+                                else {
+                                    if (cnt > 0) {
+                                        board.move(c - 1, r, tB);
+                                        c--;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        int flag = 0;
+                        for (int cTmp1 = c; cTmp1 >= 0; cTmp1--) {
+                            for (int cTmp2 = cTmp1 - 1; cTmp2 >= 0; cTmp2--) {
+                                Tile tB = board.tile(cTmp2, r);
+                                if (tB != null) {
+                                    board.move(cTmp1, r, tB);
+                                    flag = 1;
+                                    break;
+                                }
+                            }
+                        }
+                        if (flag == 1) c++;
+                    }
+
+                    changed = true;
+                    score += 3;
+                }
+            }
+        }
 
         checkGameOver();
         if (changed) {
@@ -133,11 +310,20 @@ public class Model extends Observable {
         return maxTileExists(b) || !atLeastOneMoveExists(b);
     }
 
+    public boolean checkBoardEmpty() {
+        return emptySpaceExists(board);
+    }
+
     /** Returns true if at least one space on the Board is empty.
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+        for(int i = 0; i < b.size(); i++){
+            for(int j = 0; j < b.size(); j++){
+                if (b.tile(i,j) == null) return true;
+            }
+        }
         return false;
     }
 
@@ -148,6 +334,13 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        for(int i = 0; i < b.size(); i++){
+            for(int j = 0; j < b.size(); j++){
+                if(b.tile(i,j) == null) continue;
+                if (b.tile(i,j).value() == MAX_PIECE) return true;
+                //System.out.println(b.tile(i,j));
+            }
+        }
         return false;
     }
 
@@ -159,6 +352,17 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        if (emptySpaceExists(b)) return true;
+        for (int c = 0; c < b.size(); c++) {
+            for(int r = 1; r < b.size(); r++) {
+                if (b.tile(c,r - 1).value() == b.tile(c, r).value()) return true;
+            }
+        }
+        for (int r = 0; r < b.size(); r++) {
+            for (int c = 1; c < b.size(); c++) {
+                if (b.tile(c - 1, r).value() == b.tile(c, r).value()) return true;
+            }
+        }
         return false;
     }
 
