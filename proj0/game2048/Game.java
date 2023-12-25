@@ -29,7 +29,6 @@ public class Game {
             if (!_model.gameOver()) {
                 if (_model.checkBoardEmpty()) {
                     _model.addTile(getValidNewTile());
-                    _model.notifyObservers();
                 }
             }
 
@@ -46,7 +45,6 @@ public class Game {
                     case "Up": case "Down": case "Left": case "Right":
                     case "\u2190": case "\u2191": case "\u2192": case "\u2193":
                         if (!_model.gameOver() && _model.tilt(keyToSide(cmnd))) {
-                            _model.notifyObservers(cmnd);
                             moved = true;
                         }
                         break;
