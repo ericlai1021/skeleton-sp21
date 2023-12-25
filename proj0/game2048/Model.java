@@ -97,25 +97,38 @@ public class Model extends Board {
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
-        if (side == Side.NORTH) {
+
+        if (side == Side.NORTH || side == Side.EAST) {
             for (int c = 0; c < super.size(); c++) {
                 for (int r = super.size() - 1; r >= 0; r--) {
-                    Tile t = super.tile(c, r);
+                    int ct = c;
+                    int rt = r;
+                    if (side == Side.EAST) {
+                        ct = r;
+                        rt = c;
+                    }
+                    Tile t = super.tile(ct, rt);
                     if (t != null) {
                         int cnt = 0;
-                        for (int rTmp = r - 1; rTmp >= 0; rTmp--) {
-                            Tile tB = super.tile(c, rTmp);
+                        for (int tmp = rt - 1; tmp >= 0; tmp--) {
+                            int rTmp = rt;
+                            int cTmp = ct;
+                            if (side == Side.EAST) {
+                                rTmp = ct;
+                                cTmp = rt;
+                            }
+                            Tile tB = super.tile(cTmp, rTmp);
                             if (tB == null) {
                                 cnt++;
                             }
                             else {
                                 if (tB.value() == t.value()) {
-                                    super.move(c, r, tB);
+                                    super.move(ct, rt, tB);
                                 }
                                 else {
                                     if (cnt > 0) {
-                                        super.move(c, r - 1, tB);
-                                        r--;
+                                        super.move(ct, rt - 1, tB);
+                                        rt--;
                                     }
                                 }
                                 break;
@@ -124,86 +137,64 @@ public class Model extends Board {
                     }
                     else {
                         int flag = 0;
-                        for (int rTmp1 = r; rTmp1 >= 0; rTmp1--) {
+                        for (int rTmp1 = rt; rTmp1 >= 0; rTmp1--) {
                             for (int rTmp2 = rTmp1 - 1; rTmp2 >= 0; rTmp2--) {
-                                Tile tB = super.tile(c, rTmp2);
+                                int rt1 = rTmp1;
+                                int rt2 = rTmp2;
+                                int ct1 = ct;
+                                int ct2 = ct;
+                                if (side == Side.EAST) {
+                                    ct1 = rTmp2;
+                                    ct2 = rTmp1;
+                                    rt1 = rt;
+                                    rt2 = rt;
+                                }
+                                Tile tB = super.tile(ct1, rt2);
                                 if (tB != null) {
-                                    super.move(c, rTmp1, tB);
+                                    super.move(ct2, rt1, tB);
                                     flag = 1;
                                     break;
                                 }
                             }
                         }
-                        if (flag == 1) r++;
+                        if (flag == 1) rt++;
                     }
 
                     changed = true;
                     score += 3;
                 }
             }
-        } else if (side == Side.SOUTH) {
-            for (int c = 0; c < super.size(); c++) {
-                for (int r = 0; r < super.size(); r++) {
-                    Tile t = super.tile(c, r);
-                    if (t != null) {
-                        int cnt = 0;
-                        for (int rTmp = r + 1; rTmp < super.size(); rTmp++) {
-                            Tile tB = super.tile(c, rTmp);
-                            if (tB == null) {
-                                cnt++;
-                            }
-                            else {
-                                if (tB.value() == t.value()) {
-                                    super.move(c, r, tB);
-                                }
-                                else {
-                                    if (cnt > 0) {
-                                        super.move(c, r + 1, tB);
-                                        r++;
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                    }
-                    else {
-                        int flag = 0;
-                        for (int rTmp1 = r; rTmp1 < super.size(); rTmp1++) {
-                            for (int rTmp2 = rTmp1 + 1; rTmp2 < super.size(); rTmp2++) {
-                                Tile tB = super.tile(c, rTmp2);
-                                if (tB != null) {
-                                    super.move(c, rTmp1, tB);
-                                    flag = 1;
-                                    break;
-                                }
-                            }
-                        }
-                        if (flag == 1) r--;
-                    }
-
-                    changed = true;
-                    score += 3;
-                }
-            }
-        } else if (side == Side.WEST) {
+        } else if (side == Side.SOUTH || side == Side.WEST) {
             for (int r = 0; r < super.size(); r++) {
                 for (int c = 0; c < super.size(); c++) {
-                    Tile t = super.tile(c, r);
+                    int ct = c;
+                    int rt = r;
+                    if (side == Side.WEST) {
+                        ct = r;
+                        rt = c;
+                    }
+                    Tile t = super.tile(ct, rt);
                     if (t != null) {
                         int cnt = 0;
-                        for (int cTmp = c + 1; cTmp < super.size(); cTmp++) {
-                            Tile tB = super.tile(cTmp, r);
+                        for (int tmp = rt + 1; tmp < super.size(); tmp++) {
+                            int rt1 = tmp;
+                            int ct1 = ct;
+                            if (side == Side.WEST) {
+                                ct1 = tmp;
+                                rt1 = rt;
+                            }
+                            Tile tB = super.tile(ct1, rt1);
                             if (tB == null) {
                                 cnt++;
                             }
                             else {
                                 if (tB.value() == t.value()) {
-                                    super.move(c, r, tB);
+                                    super.move(ct, rt, tB);
                                 }
                                 else {
                                     if (cnt > 0) {
-                                        super.move(c + 1, r, tB);
-                                        c++;
+                                        super.move(ct + 1, rt, tB);
+                                        ct++;
                                     }
                                 }
                                 break;
@@ -212,61 +203,27 @@ public class Model extends Board {
                     }
                     else {
                         int flag = 0;
-                        for (int cTmp1 = c; cTmp1 < super.size(); cTmp1++) {
+                        for (int cTmp1 = ct; cTmp1 < super.size(); cTmp1++) {
                             for (int cTmp2 = cTmp1 + 1; cTmp2 < super.size(); cTmp2++) {
-                                Tile tB = super.tile(cTmp2, r);
+                                int ct1 = cTmp1;
+                                int ct2 = cTmp2;
+                                int rt1 = rt;
+                                int rt2 = rt;
+                                if (side == Side.WEST) {
+                                    ct1 = ct;
+                                    ct2 = ct;
+                                    rt1 = cTmp1;
+                                    rt2 = cTmp2;
+                                }
+                                Tile tB = super.tile(ct2, rt1);
                                 if (tB != null) {
-                                    super.move(cTmp1, r, tB);
+                                    super.move(ct1, rt2, tB);
                                     flag = 1;
                                     break;
                                 }
                             }
                         }
-                        if (flag == 1) c--;
-                    }
-
-                    changed = true;
-                    score += 3;
-                }
-            }
-        } else if (side == Side.EAST) {
-            for (int r = 0; r < super.size(); r++) {
-                for (int c = super.size() - 1; c >= 0; c--) {
-                    Tile t = super.tile(c, r);
-                    if (t != null) {
-                        int cnt = 0;
-                        for (int cTmp = c - 1; cTmp >= 0; cTmp--) {
-                            Tile tB = super.tile(cTmp, r);
-                            if (tB == null) {
-                                cnt++;
-                            }
-                            else {
-                                if (tB.value() == t.value()) {
-                                    super.move(c, r, tB);
-                                }
-                                else {
-                                    if (cnt > 0) {
-                                        super.move(c - 1, r, tB);
-                                        c--;
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                    }
-                    else {
-                        int flag = 0;
-                        for (int cTmp1 = c; cTmp1 >= 0; cTmp1--) {
-                            for (int cTmp2 = cTmp1 - 1; cTmp2 >= 0; cTmp2--) {
-                                Tile tB = super.tile(cTmp2, r);
-                                if (tB != null) {
-                                    super.move(cTmp1, r, tB);
-                                    flag = 1;
-                                    break;
-                                }
-                            }
-                        }
-                        if (flag == 1) c++;
+                        if (flag == 1) ct--;
                     }
 
                     changed = true;
